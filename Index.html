@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+<title>Kira - Cherry School</title>
+<style>
+body{margin:0;background:#0f0518;overflow:hidden;font-family:sans-serif;touch-action:none}
+canvas{width:100vw;height:100vh;display:block}
+#top{position:fixed;top:0;left:0;right:0;background:linear-gradient(90deg,#1a0a24,#ff6b9d);color:white;padding:10px;text-align:center;font-weight:bold;z-index:10}
+#kira{position:fixed;top:50px;left:15px;width:70px;height:70px;border-radius:50%;border:3px solid #ff6b9d;box-shadow:0 0 20px #ff6b9d;z-index:20;background:url('kira.jpg') center/cover,#000}
+#name{position:fixed;top:55px;left:95px;background:rgba(0,0,0,0.8);color:#ff6b9d;padding:5px 12px;border-radius:20px;font-size:12px;border:1px solid #ff6b9d;z-index:20}
+#joy{position:fixed;bottom:30px;left:30px;width:115px;height:115px;background:rgba(255,107,157,0.2);border-radius:50%;border:2px solid #ff6b9d;z-index:10}
+#stick{position:absolute;width:52px;height:52px;background:#ff6b9d;border-radius:50%;left:31px;top:31px;box-shadow:0 0 15px #ff6b9d;border:2px solid white}
+#chat{position:fixed;bottom:20px;right:15px;width:58%;max-width:330px;background:rgba(0,0,0,0.9);border-radius:20px;padding:12px;border:1.5px solid #ff6b9d;z-index:10}
+#msgs{height:110px;overflow-y:auto;color:white;font-size:12px}
+#msgs div{margin-bottom:5px;background:rgba(255,107,157,0.15);padding:6px 10px;border-radius:12px}
+#chat input{width:66%;background:#1a0a24;color:white;border:1px solid #ff6b9d;border-radius:20px;padding:7px 12px}
+#chat button{background:#ff6b9d;border:none;color:white;padding:7px 14px;border-radius:20px;font-weight:bold}
+</style>
+</head>
+<body>
+<div id="top">🍒 CHERRY SCHOOL ONLINE - KIRA EDITION</div>
+<div id="kira"></div>
+<div id="name">KIRA 🌸 Long Curly Hair</div>
+<canvas id="game"></canvas>
+<div id="joy"><div id="stick"></div></div>
+<div id="chat"><div id="msgs"><div>🌸 Kira joined with long curly hair!</div><div>🎮 Move joystick to walk!</div></div><input id="inp" placeholder="Chat as Kira..."><button id="send">Send</button></div>
+<script>
+let c=document.getElementById('game'),x=c.getContext('2d');c.width=innerWidth;c.height=innerHeight;
+let px=400,py=300,joy={x:0,y:0},j=document.getElementById('joy'),s=document.getElementById('stick');
+let kiraImg=new Image();kiraImg.src='kira.jpg';
+j.addEventListener('touchmove',e=>{let r=j.getBoundingClientRect(),t=e.touches[0],dx=t.clientX-(r.left+57),dy=t.clientY-(r.top+57),d=Math.min(37,Math.sqrt(dx*dx+dy*dy)),a=Math.atan2(dy,dx);joy.x=Math.cos(a)*d/37;joy.y=Math.sin(a)*d/37;s.style.left=31+joy.x*32+'px';s.style.top=31+joy.y*32+'px';e.preventDefault()},{passive:false});
+j.addEventListener('touchend',()=>{joy.x=0;joy.y=0;s.style.left='31px';s.style.top='31px'});
+function draw(){
+x.fillStyle='#1e0f2e';x.fillRect(0,0,c.width,c.height);
+x.fillStyle='#3d1f4a';x.fillRect(40,60,c.width-80,c.height-120);
+x.strokeStyle='#ff6b9d';x.lineWidth=3;x.strokeRect(40,60,c.width-80,c.height-120);
+x.fillStyle='#fff0f5';x.font='bold 16px sans-serif';
+x.fillText('🏫 CLASS 1-A',70,110);
+x.fillText('🌸 ROOFTOP',c.width-220,110);
+x.fillText('💬 GARDEN - CHAT',70,c.height-80);
+// Kira player
+if(kiraImg.complete){x.save();x.beginPath();x.arc(px,py,28,0,Math.PI*2);x.clip();x.drawImage(kiraImg,px-28,py-32,56,56);x.restore();x.strokeStyle='#ff6b9d';x.lineWidth=3;x.beginPath();x.arc(px,py,28,0,Math.PI*2);x.stroke();}else{x.fillStyle='#ff6b9d';x.beginPath();x.arc(px,py,24,0,7);x.fill();}
+x.fillStyle='#ff6b9d';x.font='bold 12px sans-serif';x.fillText('KIRA',px-15,py-38);
+requestAnimationFrame(()=>{px+=joy.x*5;py+=joy.y*5;draw()});
+}draw();
+let m=document.getElementById('msgs'),inp=document.getElementById('inp');
+function add(t){let d=document.createElement('div');d.textContent=t;m.appendChild(d);m.scrollTop=m.scrollHeight}
+document.getElementById('send').onclick=()=>{if(!inp.value)return;add('Kira: '+inp.value);let r=['My long curls! 🖤','Meet me at rooftop? 🌸','Slay! 👑','Be my bestie? 💖'];setTimeout(()=>add('Mika: '+r[Math.floor(Math.random()*4)]),600);inp.value=''};
+</script>
+</body>
+</html>
